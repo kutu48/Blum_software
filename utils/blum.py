@@ -11,7 +11,7 @@ from better_proxy import Proxy
 from pyrogram.errors import Unauthorized, UserDeactivated, AuthKeyUnregistered
 from .headers import headers
 
-# Заголовки HTTP-запросов
+# HTTP Request Headers
 headers = {
     'Accept': '*/*',
     'Accept-Language': 'ru,en;q=0.9,en-GB;q=0.8,en-US;q=0.7',
@@ -27,7 +27,7 @@ headers = {
     'sec-ch-ua-platform': '"Windows"',
 }
 
-# Класс для работы с клиентом Pyrogram
+# Class for working with Pyrogram client
 class Start:
     def __init__(self, tg_client: Client):
         self.session_name = tg_client.name
@@ -43,7 +43,7 @@ class Start:
             logger.error(f"Ошибка при проверке прокси: {e}")
 
     async def main(self, proxy: str | None):
-        await self.tg_client.start()  # Начинаем сессию клиента перед использованием
+        await self.tg_client.start()  Start the client session before using it
         if config.USE_PROXY:
             proxy_conn = ProxyConnector().from_url(proxy) if proxy else None
         else:
@@ -54,7 +54,7 @@ class Start:
 
             while True:
                 try:
-                    await asyncio.sleep(random.uniform(6, 10))  # Случайная задержка от 6  до 10 секунд
+                    await asyncio.sleep(random.uniform(6, 10))  "# Random delay from 6 to 10 seconds"
                     await self.login(http_client=http_client, proxy=proxy)
 
                     while True:
@@ -62,23 +62,23 @@ class Start:
                             timestamp, start_time, end_time = await self.balance(http_client=http_client)
 
                             if start_time is None and end_time is None:
-                                await asyncio.sleep(random.uniform(6, 10))  # Случайная задержка от 6  до 10 секунд перед началом фарма
+                                await asyncio.sleep(random.uniform(6, 10))  "# Random delay from 6 to 10 seconds before starting farming"
                                 await self.start(http_client=http_client)
-                                logger.info(f"Поток {self} | Начало фарма!")
+                                logger.info(f"Thread {self} | Farming Dimulai")
 
                             elif start_time is not None and end_time is not None and timestamp >= end_time:
                                 timestamp, balance = await self.claim(http_client=http_client)
-                                logger.success(f"Поток {self} | Получена награда! Баланс: {balance}")
-                                await asyncio.sleep(random.uniform(6, 10))  # Случайная задержка от 6  до 10 секунд  перед клеймом награды
+                                logger.success(f"Thread {self} | Balance: {balance}")
+                                await asyncio.sleep(random.uniform(6, 10))  # Random delay from 6 to 10 seconds before claiming the reward
 
 
                             else:
-                                logger.info(f"Поток {self} | Спим {end_time - timestamp} секунд!")
+                                logger.info(f"Thread {self} | Спим {end_time - timestamp} Detik!")
                                 await asyncio.sleep(end_time - timestamp)
 
                             await asyncio.sleep(1)
                         except Exception as e:
-                            logger.error(f"Поток {self} | Ошибка: {e}")
+                            logger.error(f"Thread {self} | Kesalahan: {e}")
                 except Exception as e:
                     logger.error(f"Ошибка: {e}")
 
